@@ -17,6 +17,9 @@ class Stat(BaseModel):
     def set(self, value):
         self.current = value
 
+    def __repr__(self) -> str:
+        return str(self.current)
+
 
 strength_settings = {"name":"Strength", "current": 5*d6.rolln(3),"game_over":"Your frail body succumbs under its own weight. You are unable to move."}
 class Strength(Stat):
@@ -55,13 +58,30 @@ class Size(Stat):
         super(Size, self).__init__(**size_settings)
 
 
-intelligence_setting = {}
+intelligence_settings = {"name":"Intelligence", "current": 5*(d6.rolln(2)+6),"game_over":"You are in a state of drooling and babbling."}
+class Intelligence(Stat):
+    def __init__(self):
+        super(Intelligence, self).__init__(**intelligence_settings)
 
-education_settings = {}
 
-luck_settings = {}
+education_settings = {"name":"Education", "current": 5*(d6.rolln(2)+6),"game_over":"You lose your memory."}
+class Education(Stat):
+    def __init__(self):
+        super(Education, self).__init__(**education_settings)
+
+
+luck_settings = {"name":"Luck", "current": 5*(d6.rolln(3)),"game_over":"Misfortune befalls you."}
+class Luck(Stat):
+    def __init__(self):
+        super(Luck, self).__init__(**luck_settings)
+
+
+power_settings = {"name":"Power", "current": 5*(d6.rolln(3)),"game_over":"You wander the streets in a zombie-like fashion."}
+class Power(Stat):
+    def __init__(self):
+        super(Power, self).__init__(**power_settings)
 
 
 if __name__ == "__main__":
     size = Strength()
-    print(repr(size))
+    print(size)
