@@ -1,0 +1,12 @@
+coc1920:
+  - name: Investigation
+    min: 20
+  - name: Dodge
+  - name: Accounting
+    min: 10
+  - name: Anthropology
+    min: 1
+  - name: Archaeology
+    min: 1
+  - name: Art
+    min: 5

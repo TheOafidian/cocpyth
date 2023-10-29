@@ -24,3 +24,4 @@ class Character():
 if __name__ == "__main__":
 
     steve = Character("Steve", "Minecraft")
+    print(steve)
