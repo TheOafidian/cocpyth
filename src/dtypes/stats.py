@@ -1,7 +1,8 @@
+import math
 import logging
+from typing import Any
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
-from pydantic.dataclasses import dataclass
-from dice import d6, d100
+from dice import d6
 
 class Stat(BaseModel):
     name: str
@@ -19,7 +20,57 @@ class Stat(BaseModel):
 
     def __repr__(self) -> str:
         return str(self.current)
+    
+    def __str__(self) -> str:
+        return f"{self.name}: {self.current}"
+    
+    def __add__(self, x):
+        temp = self.copy()
+        temp.current += x
+        return temp
+    
+    def __iadd__(self,x):
+        self.current += x
+        return self
 
+    def __sub__(self, x):
+        temp = self.copy()
+        temp.current -= x
+        return temp
+
+    def __isub__(self,x):
+        self.current -= x
+        return self
+
+    def __mul__(self,x):
+        temp = self.copy()
+        temp.current *= x
+        return temp
+
+    def __ge__(self, x):
+        return self.current >= x
+
+    def __gt__(self, x):
+        return self.current > x
+
+    def __le__(self, x):
+        return self.current <= x
+
+    def __lt__(self, x):
+        return self.current < x
+
+    def __pos__(self):
+        return self.current
+    
+    def __neg__(self):
+        return -self.current
+
+
+
+def cthulhu_round(fl:float, higher_is_better=True):
+    if higher_is_better:
+        return math.floor(fl)
+    return math.ceil(fl)
 
 strength_settings = {"name":"Strength", "current": 5*d6.rolln(3),"game_over":"Your frail body succumbs under its own weight. You are unable to move."}
 class Strength(Stat):
@@ -80,6 +131,16 @@ power_settings = {"name":"Power", "current": 5*(d6.rolln(3)),"game_over":"You wa
 class Power(Stat):
     def __init__(self):
         super(Power, self).__init__(**power_settings)
+
+sanity_settings = {"name":"Sanity", "current": 5*(d6.rolln(2)+6),"game_over":"You are driven insane!"}
+class Sanity(Stat):
+    def __init__(self):
+        super(Sanity, self).__init__(**sanity_settings)
+
+hitpoints_settings = {"name":"Hitpoints", "current":10, "max": 20, "game_over":"You bleed out from your wounds and die."}
+class HitPoints(Stat):
+    def __init__(self):
+        super(HitPoints, self).__init__(**hitpoints_settings)
 
 
 if __name__ == "__main__":
