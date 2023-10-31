@@ -1,6 +1,7 @@
 from pydantic.dataclasses import dataclass
-from skills import SKILLS1920
-import stats
+from dtypes.skills import SKILLS1920
+from utils.weird_math import cthulhu_round
+import dtypes.stats as stats
 
 @dataclass
 class Character():
@@ -20,7 +21,7 @@ class Character():
 
     def __post_init__(self):
         self.sanity.current = self.power.current
-        self.hp.current = stats.cthulhu_round((self.constitution.current + self.size.current)/10)
+        self.hp.current = cthulhu_round((self.constitution.current + self.size.current)/10)
         self.skills = SKILLS1920
 
 if __name__ == "__main__":

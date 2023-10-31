@@ -2,7 +2,8 @@ import yaml
 from typing import Optional
 from pathlib import Path
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
-import stats
+from utils.weird_math import cthulhu_round
+import dtypes.stats as stats 
 
 skills = yaml.safe_load(Path("data/skills.yaml").read_text())
 coc_settings = skills.keys()
@@ -19,8 +20,8 @@ class Skill(BaseModel):
     description: Optional[str] = None
 
     def _set_half_and_fifth(self):
-        self.half = stats.cthulhu_round(self.current/2)
-        self.fifth = stats.cthulhu_round(self.current/5)
+        self.half = cthulhu_round(self.current/2)
+        self.fifth = cthulhu_round(self.current/5)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -33,8 +34,8 @@ class Skill(BaseModel):
     def __add__(self, x):
         temp = self.copy()
         temp.current += x
-        temp.half = stats.cthulhu_round(temp.current/2)
-        temp.fifth = stats.cthulhu_round(temp.current/5)
+        temp.half = cthulhu_round(temp.current/2)
+        temp.fifth = cthulhu_round(temp.current/5)
         return temp
     
     def __iadd__(self,x):
@@ -45,8 +46,8 @@ class Skill(BaseModel):
     def __sub__(self, x):
         temp = self.copy()
         temp.current -= x
-        temp.half = stats.cthulhu_round(temp.current/2)
-        temp.fifth = stats.cthulhu_round(temp.current/5)
+        temp.half = cthulhu_round(temp.current/2)
+        temp.fifth = cthulhu_round(temp.current/5)
         return temp
 
     def __isub__(self,x):

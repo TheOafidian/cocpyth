@@ -1,8 +1,6 @@
-import math
 import logging
-from typing import Any
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
-from dice import d6
+from dtypes.dice import d6
 
 class Stat(BaseModel):
     name: str
@@ -65,12 +63,6 @@ class Stat(BaseModel):
     def __neg__(self):
         return -self.current
 
-
-
-def cthulhu_round(fl:float, higher_is_better=True):
-    if higher_is_better:
-        return math.floor(fl)
-    return math.ceil(fl)
 
 strength_settings = {"name":"Strength", "current": 5*d6.rolln(3),"game_over":"Your frail body succumbs under its own weight. You are unable to move."}
 class Strength(Stat):
