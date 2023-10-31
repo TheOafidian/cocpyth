@@ -1,4 +1,5 @@
 from pydantic.dataclasses import dataclass
+from skills import SKILLS1920
 import stats
 
 @dataclass
@@ -20,8 +21,13 @@ class Character():
     def __post_init__(self):
         self.sanity.current = self.power.current
         self.hp.current = stats.cthulhu_round((self.constitution.current + self.size.current)/10)
+        self.skills = SKILLS1920
 
 if __name__ == "__main__":
 
     steve = Character("Steve", "Minecraft")
-    print(steve)
+    print(steve.skills.Jump)
+    print(steve.skills.Jump + 10)
+    print(steve.skills.Jump)
+    # for skills with spaces
+    #print(steve.skills.__dict__["Arts and Craft"])
