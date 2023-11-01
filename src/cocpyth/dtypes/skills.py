@@ -7,6 +7,7 @@ from cocpyth.utils.weird_math import cthulhu_round
 skills = yaml.safe_load(Path("data/skills.yaml").read_text())
 coc_settings = skills.keys()
 
+
 class Skill(BaseModel):
     name: str
     specialization: bool = False
@@ -19,25 +20,25 @@ class Skill(BaseModel):
     description: Optional[str] = None
 
     def _set_half_and_fifth(self):
-        self.half = cthulhu_round(self.current/2)
-        self.fifth = cthulhu_round(self.current/5)
+        self.half = cthulhu_round(self.current / 2)
+        self.fifth = cthulhu_round(self.current / 5)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._set_half_and_fifth()
 
-    def set(self, new:PositiveInt):
+    def set(self, new: PositiveInt):
         self.current = new
         self._set_half_and_fifth()
 
     def __add__(self, x):
         temp = self.copy()
         temp.current += x
-        temp.half = cthulhu_round(temp.current/2)
-        temp.fifth = cthulhu_round(temp.current/5)
+        temp.half = cthulhu_round(temp.current / 2)
+        temp.fifth = cthulhu_round(temp.current / 5)
         return temp
-    
-    def __iadd__(self,x):
+
+    def __iadd__(self, x):
         self.current += x
         self._set_half_and_fifth()
         return self
@@ -45,11 +46,11 @@ class Skill(BaseModel):
     def __sub__(self, x):
         temp = self.copy()
         temp.current -= x
-        temp.half = cthulhu_round(temp.current/2)
-        temp.fifth = cthulhu_round(temp.current/5)
+        temp.half = cthulhu_round(temp.current / 2)
+        temp.fifth = cthulhu_round(temp.current / 5)
         return temp
 
-    def __isub__(self,x):
+    def __isub__(self, x):
         self.current -= x
         self._set_half_and_fifth()
         return self
@@ -58,15 +59,17 @@ class Skill(BaseModel):
 class SkillDict(dict):
     def __init__(self, *args, **kwargs):
         super(SkillDict, self).__init__(*args, **kwargs)
-        safe_keys = {k.lower().replace(" ","_"):v for k,v in self.items()}
+        safe_keys = {k.lower().replace(" ", "_"): v for k, v in self.items()}
         self.__dict__ = safe_keys
 
-def build_skills(setting:str) -> [Skill]:
+
+def build_skills(setting: str) -> [Skill]:
     setting_skills = skills[setting]
-    setting_skills = { s["name"] : Skill(**s) for s in setting_skills}
+    setting_skills = {s["name"]: Skill(**s) for s in setting_skills}
     return SkillDict(setting_skills)
 
-SETTING_SKILLS = {setting:build_skills(setting) for setting in coc_settings}
+
+SETTING_SKILLS = {setting: build_skills(setting) for setting in coc_settings}
 SKILLS1920 = SETTING_SKILLS["coc1920"]
 
 if __name__ == "__main__":

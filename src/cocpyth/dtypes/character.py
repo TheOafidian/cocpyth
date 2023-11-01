@@ -3,8 +3,9 @@ from cocpyth.dtypes.skills import SKILLS1920
 from cocpyth.utils.weird_math import cthulhu_round
 import cocpyth.dtypes.stats as stats
 
+
 @dataclass
-class Character():
+class Character:
     first_name: str
     last_name: str
     sanity: stats.Sanity = stats.Sanity()
@@ -22,7 +23,7 @@ class Character():
     def __post_init__(self):
         self.full_name = self.first_name + " " + self.last_name
         self.sanity.current = self.power.current
-        self.hp.current = cthulhu_round((self.constitution.current + self.size.current)/10)
+        self.hp.current = cthulhu_round((self.constitution.current + self.size.current) / 10)
         self.skills = SKILLS1920
 
 
