@@ -1,37 +1,23 @@
 import click
-from enum import Enum
-from typing import Union
-from pydantic import BaseModel
-from cocpyth.dtypes.character import Character
 from cocpyth.utils.io import save_character, load_character
-
-
-class GenderEnum(str, Enum):
-    M = "male"
-    F = "female"
-
-
-class CharacterGenerator(BaseModel):
-    rstats: bool
-    rgender: Union[bool, GenderEnum]
-    rname: bool
+from cocpyth.generator.character import CharacterGenerator
 
 
 def print_yellow(string):
     click.echo(click.style(string, fg="yellow"))
 
 
-# @click.group()
-# @click.option("-n", "--rname", default=False, prompt="Roll random stats?", help="Wether to randomly roll for the character's stats.", type=bool)
-# @click.option("-g", "--rgender", type=click.Choice(["M","F","False"], case_sensitive=False) ,default=False, prompt="Pick random biological gender?", help="Wether to pick a random biological gender.")
-# @click.pass_context
-# def cli(ctx, rstats, rname, rgender):
-#    ctx.obj = CharacterGenerator(rstats,rgender,rname)
+@click.group("cocpyth")
+@click.argument("filename")
+@click.pass_context
+def cocpyth(ctx, filename):
+   # Translate to boolean if needed
+   ctx.obj = dict(
+       filename = filename
+   )
 
 
-@click.command()
-@click.option("--fname", prompt="First name", help="The character's first name.")
-@click.option("--lname", prompt="Last name", help="The character's last name.")
+@cocpyth.command()
 @click.option(
     "-r",
     "--rstats",
@@ -40,20 +26,19 @@ def print_yellow(string):
     help="Wether to randomly roll for the character's stats.",
     type=bool,
 )
-# @click.pass_obj
-def generate_character(fname, lname, rstats):
-    if rstats:
-        character = Character(first_name=fname, last_name=lname)
-        print_yellow(character)
-        save_character(character, f"{fname}_{lname}.yaml")
-        ld = load_character(f"{fname}_{lname}.yaml")
-        print(ld.skills)
-        # pick_occupation()
+@click.option("-n", "--rname", default=False, prompt="Roll random name?", help="Wether to randomly roll for the character's name.", type=bool)
+@click.option("-g", "--rgender", type=click.Choice(["M","F","True"], case_sensitive=False) ,default="True", prompt="Pick random biological gender?", help="Wether to pick a random biological gender.")
+@click.pass_obj
+def generate_character(ctx, rstats, rname, rgender):
+    if rgender == "True":
+       rgender = True
+   
+    generator = CharacterGenerator(rstats, rgender, rname)
+    character = generator.generate()
+    save_character(character, ctx["filename"])
 
-    else:
-        character = None
-        raise NotImplementedError
-
+def main():
+    cocpyth(prog_name="cocpyth")
 
 if __name__ == "__main__":
-    character = generate_character()
+    main()

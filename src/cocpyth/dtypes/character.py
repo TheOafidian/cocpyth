@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic.dataclasses import dataclass
 from cocpyth.dtypes.skills import SKILLS1920
 from cocpyth.utils.weird_math import cthulhu_round
@@ -25,6 +26,11 @@ class Character:
         self.sanity.current = self.power.current
         self.hp.current = cthulhu_round((self.constitution.current + self.size.current) / 10)
         self.skills = SKILLS1920
+
+
+class GenderEnum(str, Enum):
+    M = "male"
+    F = "female"
 
 
 if __name__ == "__main__":
