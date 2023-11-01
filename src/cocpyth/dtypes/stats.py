@@ -1,6 +1,6 @@
 import logging
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
-from dtypes.dice import d6
+from cocpyth.dtypes.dice import d6
 
 class Stat(BaseModel):
     name: str

@@ -1,104 +1,104 @@
 coc1920:
   - name: Dodge
   - name: Accounting
-    min: 5
+    current: 5
     description: "Grants understanding of accountancy procedures and reveals the financial functioning of a business or person. Inspecting the books, one might detect cheated employees, siphoned-off funds, payment of bribes or blackmail, and whether the financial condition is better or worse than claimed. Looking through old accounts, one could see how money was gained or lost in the past (grain, slave-trading, whiskey-running, etc.) and to whom and for what payment was made."
   - name: Anthropology
-    min: 1
+    current: 1
   - name: Appraise
-    min: 5
+    current: 5
   - name: Archaeology
-    min: 1
+    current: 1
   - name: Arts and Crafts
-    min: 5
+    current: 5
     specialization: true
   - name: Artillery
-    min: 1
+    current: 1
     uncommon: true
   - name: Charm
-    min: 15
+    current: 15
   - name: Climb
   - name: Credit Rating
-    min: 0
+    current: 0
   - name: Cthulhu Mythos
-    min: 0
+    current: 0
   - name: Demolitions
-    min: 1
+    current: 1
     uncommon: true
   - name: Disguise
-    min: 5
+    current: 5
   - name: Diving
-    min : 1
+    current : 1
   - name: Drive Auto
   - name: Electrical Repair
-    min: 10
+    current: 10
   - name: Fast Talk
-    min: 5
+    current: 5
   - name: Fighting (Brawl)
-    min: 25
+    current: 25
   - name: Fighting
     specialization: true
   - name: Firearms (Handgun)
   - name: Firearms (Rifle/Shotgun)
-    min: 25
+    current: 25
   - name: Firearms
     specialization: true
   - name: First Aid
-    min: 30
+    current: 30
   - name: History
-    min: 5
+    current: 5
   - name: Hypnosis
-    min: 1
+    current: 1
     uncommon: true
   - name: Intimidate
-    min: 15
+    current: 15
   - name: Jump
   - name: Language (Own)
   - name: Language
     specialization: true
   - name: Law
-    min: 5
+    current: 5
   - name: Library Use
   - name: Listen
   - name: Locksmith
-    min: 1
+    current: 1
   - name: Mechanical Repair
-    min: 10
+    current: 10
   - name: Medicine
-    min: 1
+    current: 1
   - name: Natural World
-    min: 10
+    current: 10
   - name: Navigate
-    min: 10
+    current: 10
   - name: Occult
-    min: 5
+    current: 5
   - name: Operate Heavy Machinery
-    min: 1
+    current: 1
   - name: Persuade
-    min: 10
+    current: 10
   - name: Pilot
-    min: 1
+    current: 1
     specialization: true
   - name: Psychoanalysis
-    min: 1
+    current: 1
   - name: Psychology
-    min: 10
+    current: 10
   - name: Read Lips
-    min: 1
+    current: 1
     uncommon: true
   - name: Ride
-    min: 5
+    current: 5
   - name: Science
-    min: 1
+    current: 1
     specialization: true
   - name: Sleight of Hand
-    min: 10
+    current: 10
   - name: Spot Hidden
-    min: 25
+    current: 25
   - name: Stealth
   - name: Survival
     specializations: true
   - name: Swim
   - name: Throw
   - name: Track
-    min: 10 
+    current: 10 

@@ -2,8 +2,7 @@ import yaml
 from typing import Optional
 from pathlib import Path
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
-from utils.weird_math import cthulhu_round
-import dtypes.stats as stats 
+from cocpyth.utils.weird_math import cthulhu_round
 
 skills = yaml.safe_load(Path("data/skills.yaml").read_text())
 coc_settings = skills.keys()
