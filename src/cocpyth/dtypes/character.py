@@ -17,7 +17,7 @@ class Character():
     power: stats.Power = stats.Power()
     appearance: stats.Appearance = stats.Appearance()
     luck: stats.Luck = stats.Luck()
-    hp: stats.HitPoints = stats.HitPoints()
+    hp: stats.Hitpoints = stats.Hitpoints()
 
     def __post_init__(self):
         self.full_name = self.first_name + " " + self.last_name
@@ -29,8 +29,8 @@ class Character():
 if __name__ == "__main__":
 
     steve = Character("Steve", "Minecraft")
-    print(steve.skills.Jump)
-    print(steve.skills.Jump + 10)
-    print(steve.skills.Jump)
+    print(steve.skills.jump)
+    print(steve.skills.jump + 10)
+    print(steve.skills.jump)
     # for skills with spaces
-    #print(steve.skills.__dict__["Arts and Craft"])
+    print(steve.skills.arts_and_crafts)

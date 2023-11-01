@@ -17,10 +17,10 @@ class Stat(BaseModel):
         self.current = value
 
     def __repr__(self) -> str:
-        return str(self.current)
+        return "{}: {}".format(self.name, self.current)
     
     def __str__(self) -> str:
-        return f"{self.name}: {self.current}"
+        return "{}: {}".format(self.name, self.current)
     
     def __add__(self, x):
         temp = self.copy()
@@ -130,11 +130,7 @@ class Sanity(Stat):
         super(Sanity, self).__init__(**sanity_settings)
 
 hitpoints_settings = {"name":"Hitpoints", "current":10, "max": 20, "game_over":"You bleed out from your wounds and die."}
-class HitPoints(Stat):
+class Hitpoints(Stat):
     def __init__(self):
-        super(HitPoints, self).__init__(**hitpoints_settings)
+        super(Hitpoints, self).__init__(**hitpoints_settings)
 
-
-if __name__ == "__main__":
-    size = Strength()
-    print(size)

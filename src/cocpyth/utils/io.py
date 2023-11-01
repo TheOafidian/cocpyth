@@ -1,38 +1,48 @@
 import yaml
-import re
 from yaml import Loader
+from functools import partial
 from cocpyth.dtypes.character import Character
 from cocpyth.dtypes.skills import Skill, SkillDict
-from cocpyth.dtypes.stats import Strength, Sanity, Dexterity, Constitution, HitPoints, Appearance, Intelligence, Education, Size, Luck, Power
+from cocpyth.dtypes.stats import Stat, Strength, Sanity, Dexterity, Constitution, Hitpoints, Appearance, Intelligence, Education, Size, Luck, Power
 
 def skill_representer(dumper, data):
-    return dumper.represent_scalar(u'!Skill', f'({data.current}|{data.half}|{data.fifth})')
-
-yaml.add_implicit_resolver(u'!Skill', re.compile(r"^(\d+|\d+|\d+)$"))
+    return dumper.represent_scalar(u'!Skill', f'{data.name}: ({data.current}|{data.half}|{data.fifth})')
 
 def skill_constructor(loader, node):
     value = loader.construct_scalar(node)
-    current = value.strip("()").split("|")[0]
-    return Skill(name="testing", current=current)
+    parts = value.split(":")
+    skname = parts[0].strip()
+    skval = parts[1].split("|")[0].strip().lstrip("(")
+    return Skill(name=skname, current=int(skval))
 
 def stat_representer(dumper, data):
-    return dumper.represent_scalar(f'!{data.name}', f'({data.current})')
+    return dumper.represent_scalar(f'!{data.name}', f'{data.current}')
 
-#yaml.add_representer(SkillDict, skillset_representer)
+def stat_constructor(loader, node, stat_class:Stat):
+    value = loader.construct_scalar(node)
+    stat = stat_class()
+    stat.set(int(value))
+    return stat
+
 yaml.add_representer(Skill, skill_representer)
-yaml.add_constructor(u'!Skill', skill_constructor)
-#for stat in [Strength, Sanity, Dexterity, Constitution, HitPoints, Appearance, Intelligence, Education, Size, Luck, Power]:
-#    yaml.add_representer(stat, stat_representer)
+yaml.add_constructor('!Skill', skill_constructor)
+for stat in [Strength, Sanity, Dexterity, Constitution, Hitpoints, Appearance, Intelligence, Education, Size, Luck, Power]:
+    yaml.add_representer(stat, stat_representer)
+    this_stat_constructor = partial(stat_constructor, stat_class=stat)
+    yaml.add_constructor("!{}".format(stat.__name__), this_stat_constructor)
+
 
 def save_character(char: Character, file):
     with open(file, "w") as f:
+        skills = list(char.skills.values())
+        char.skills = skills
         yaml.dump(char, f)
     return file
 
 def load_character(file):
     with open(file, "r") as f:
-        return yaml.load(f, Loader)
-    
-if __name__ == "__main__":
-    strength = Strength()
-    print(yaml.dump(strength))
+        character = yaml.load(f, Loader)
+        skills = {v.name:v for v in character.skills}
+        character.skills = SkillDict(skills)
+        return character
+

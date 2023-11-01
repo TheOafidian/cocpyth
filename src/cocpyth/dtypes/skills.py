@@ -58,7 +58,8 @@ class Skill(BaseModel):
 class SkillDict(dict):
     def __init__(self, *args, **kwargs):
         super(SkillDict, self).__init__(*args, **kwargs)
-        self.__dict__ = self
+        safe_keys = {k.lower().replace(" ","_"):v for k,v in self.items()}
+        self.__dict__ = safe_keys
 
 def build_skills(setting:str) -> [Skill]:
     setting_skills = skills[setting]
