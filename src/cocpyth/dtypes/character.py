@@ -2,6 +2,7 @@ from enum import Enum
 from pydantic.dataclasses import dataclass
 from cocpyth.dtypes.skills import SKILLS1920
 from cocpyth.utils.weird_math import cthulhu_round
+from cocpyth.dtypes.dice import d4, d6
 import cocpyth.dtypes.stats as stats
 
 
@@ -20,13 +21,43 @@ class Character:
     appearance: stats.Appearance = stats.Appearance()
     luck: stats.Luck = stats.Luck()
     hp: stats.Hitpoints = stats.Hitpoints()
+    mp: stats.Magicpoints = stats.Magicpoints()
 
     def __post_init__(self):
         self.full_name = self.first_name + " " + self.last_name
         self.sanity.current = self.power.current
         self.hp.current = cthulhu_round((self.constitution.current + self.size.current) / 10)
+        self.mp.current = self.power.current / 5
         self.skills = SKILLS1920
+        self.skills.dodge.set(self.dexterity.current/2)
+        self.damage_bonus, self.build = self._determine_build_db()
+        self.moverate = self._determine_move_rate()
 
+    def _determine_build_db(self):
+        physique = self.strength.current + self.size.current
+
+        if physique < 65:
+            return -2, -2
+        elif physique < 85:
+            return -1, -1
+        elif physique < 125:
+            return 0, 0
+        elif physique < 165:
+            return d4, 1
+        else: return d6, 2
+
+    def _determine_move_rate(self):
+
+        STR = self.strength.current
+        DEX = self.dexterity.current
+        SIZ = self.size.current
+
+        if STR < SIZ and DEX < SIZ:
+            return 7
+        if STR > SIZ and DEX > SIZ:
+            return 9
+        return 8
+        
 
 class GenderEnum(str, Enum):
     M = "male"

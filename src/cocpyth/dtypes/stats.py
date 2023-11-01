@@ -1,6 +1,7 @@
 import logging
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
 from cocpyth.dtypes.dice import d6
+from cocpyth.utils.weird_math import cthulhu_round
 
 
 class Stat(BaseModel):
@@ -46,6 +47,15 @@ class Stat(BaseModel):
         temp = self.copy()
         temp.current *= x
         return temp
+
+    def __truediv__(self, x):
+        temp = self.copy()
+        temp.current = cthulhu_round(temp.current / x) 
+        return temp
+
+    def __idiv__(self, x):
+        self.current = cthulhu_round(self.current / x)
+        return self
 
     def __ge__(self, x):
         return self.current >= x
@@ -189,3 +199,16 @@ hitpoints_settings = {
 class Hitpoints(Stat):
     def __init__(self):
         super(Hitpoints, self).__init__(**hitpoints_settings)
+
+
+magicpoints_settings = {
+    "name": "Magicpoints",
+    "current": 10,
+    "max": 20,
+    "game_over": "NA"
+}
+
+class Magicpoints(Stat):
+    def __init__(self):
+        super(Magicpoints, self).__init__(**hitpoints_settings)
+

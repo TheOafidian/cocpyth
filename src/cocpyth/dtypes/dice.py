@@ -18,8 +18,8 @@ class Dice:
 
 
 d100 = Dice(100)
-
 d6 = Dice(6)
+d4 = Dice(4)
 
 if __name__ == "__main__":
     res = d100.roll()

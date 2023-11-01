@@ -35,6 +35,7 @@ def generate_character(ctx, rstats, rname, rgender):
    
     generator = CharacterGenerator(rstats, rgender, rname)
     character = generator.generate()
+    print_yellow(character)
     save_character(character, ctx["filename"])
 
 def main():

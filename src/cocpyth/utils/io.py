@@ -10,6 +10,7 @@ from cocpyth.dtypes.stats import (
     Dexterity,
     Constitution,
     Hitpoints,
+    Magicpoints,
     Appearance,
     Intelligence,
     Education,
@@ -28,7 +29,7 @@ def skill_constructor(loader, node):
     parts = value.split(":")
     skname = parts[0].strip()
     skval = parts[1].split("|")[0].strip().lstrip("(")
-    return Skill(name=skname, current=int(skval))
+    return Skill(name=skname, current=int(float(skval)))
 
 
 def stat_representer(dumper, data):
@@ -38,7 +39,7 @@ def stat_representer(dumper, data):
 def stat_constructor(loader, node, stat_class: Stat):
     value = loader.construct_scalar(node)
     stat = stat_class()
-    stat.set(int(value))
+    stat.set(int(float(value)))
     return stat
 
 
@@ -50,6 +51,7 @@ for stat in [
     Dexterity,
     Constitution,
     Hitpoints,
+    Magicpoints,
     Appearance,
     Intelligence,
     Education,

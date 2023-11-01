@@ -54,7 +54,15 @@ class Skill(BaseModel):
         self.current -= x
         self._set_half_and_fifth()
         return self
+    
+    def __truediv__(self, x):
+        temp = self.copy()
+        temp.current = cthulhu_round(temp.current / x) 
+        return temp
 
+    def __idiv__(self, x):
+        self.current = cthulhu_round(self.current / x)
+        return self
 
 class SkillDict(dict):
     def __init__(self, *args, **kwargs):
