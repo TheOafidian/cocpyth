@@ -5,11 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "cocpyth"
 dynamic = ["version"]
-description = ''
+description = 'Command line interface to generate Call of Cthulhu characters'
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
-keywords = []
+keywords = ["Call", "of", "Cthulhu", "Character", "Generator", "cli"]
 authors = [
   { name = "TheOafidian", email = "tim.van.rillaer@hotmail.com" },
 ]
@@ -27,9 +27,9 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Documentation = "https://github.com/unknown/cocpyth#readme"
-Issues = "https://github.com/unknown/cocpyth/issues"
-Source = "https://github.com/unknown/cocpyth"
+Documentation = "https://github.com/TheOafidian/cocpyth#readme"
+Issues = "https://github.com/TheOafidian/cocpyth/issues"
+Source = "https://github.com/TheOafidian/cocpyth"
 
 [tool.hatch.version]
 path = "src/cocpyth/__about__.py"

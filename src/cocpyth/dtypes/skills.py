@@ -1,10 +1,10 @@
 import yaml
+import importlib.resources
 from typing import Optional
-from pathlib import Path
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
 from cocpyth.utils.weird_math import cthulhu_round
 
-skills = yaml.safe_load(Path("data/skills.yaml").read_text())
+skills = yaml.safe_load(importlib.resources.open_text("cocpyth.data", "skills.yaml"))
 coc_settings = skills.keys()
 
 

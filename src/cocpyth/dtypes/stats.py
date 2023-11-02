@@ -210,5 +210,5 @@ magicpoints_settings = {
 
 class Magicpoints(Stat):
     def __init__(self):
-        super(Magicpoints, self).__init__(**hitpoints_settings)
+        super(Magicpoints, self).__init__(**magicpoints_settings)
 
