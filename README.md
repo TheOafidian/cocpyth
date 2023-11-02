@@ -16,6 +16,18 @@
 pip install cocpyth
 ```
 
+## Usage
+
+```console
+Usage: cocpyth [OPTIONS] FILENAME COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  generate-character
+```
+
 ## License
 
 `cocpyth` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
