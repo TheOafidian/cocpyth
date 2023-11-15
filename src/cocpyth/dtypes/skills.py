@@ -28,7 +28,7 @@ class Skill(BaseModel):
         self._set_half_and_fifth()
 
     def set(self, new: PositiveInt):
-        self.current = new
+        self.current = cthulhu_round(new)
         self._set_half_and_fifth()
 
     def __add__(self, x):
