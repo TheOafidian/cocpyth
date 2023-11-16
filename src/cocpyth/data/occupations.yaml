@@ -1,0 +1,15 @@
+coc1920:
+  - name: Antiquarian
+    credit: 30-70
+    points: Education*4
+    skill_choices:
+      - Appraise
+      - History
+      - Library Use
+      - Spot Hidden
+      - Interpersonal
+      - Art/Craft
+      - Language (Own)
+      - Language
+      - Any
+    
