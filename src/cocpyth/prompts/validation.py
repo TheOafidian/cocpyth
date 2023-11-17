@@ -2,6 +2,7 @@ import random
 from prompt_toolkit.document import Document
 from prompt_toolkit.validation import Validator, ValidationError
 from cocpyth.dtypes.occupation import OCCUPATIONS1920
+from cocpyth.dtypes.skill import SKILLS1920
 import cocpyth.prompts.default_responses as responses
 
 def yes_or_no(response:str):
@@ -63,3 +64,22 @@ class OccupationValidator(Validator):
         txt = document.text
         if txt:
             interpret_occupation(txt)
+
+def interpret_skill(input, valid_choices:list):
+    res = input.strip()
+    if res in valid_choices:
+        return res
+    raise ValidationError(message="Not a valid skill")
+
+
+class SkillValidator(Validator):    
+
+    def __init__(self, choices:list) -> None:
+        super().__init__()
+        self.valid_choices = choices
+
+    """Validate if skill exists in setting"""
+    def validate(self, document: Document) -> None:
+        txt = document.text
+        if txt:
+            interpret_skill(txt, self.valid_choices)

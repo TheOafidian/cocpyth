@@ -6,7 +6,10 @@ from prompt_toolkit.completion import WordCompleter
 from cocpyth.utils.io import save_character, load_character
 from cocpyth.generator.character import CharacterGenerator
 from cocpyth.dtypes.occupation import OCCUPATIONS1920
-from cocpyth.prompts.validation import OccupationValidator, YesNoValidator, GenderOrRandomValidator, gender_or_random, yes_or_no, interpret_occupation
+from cocpyth.dtypes.skill import SKILLS1920
+from cocpyth.dtypes.character import Character
+from cocpyth.dtypes.occupation import Occupation
+from cocpyth.prompts.validation import OccupationValidator, SkillValidator, YesNoValidator, GenderOrRandomValidator, gender_or_random, yes_or_no, interpret_occupation, interpret_skill
 
 DEFAULT_JSON = "character.json"
 
@@ -19,7 +22,7 @@ def default_param(string: str):
     return f'default: [{string}]'
 
 
-charsheet_prompt_style = Style.from_dict({'': '', 'file': '#884444', 'green': '#00aa00'})
+charsheet_prompt_style = Style.from_dict({'': '', 'file': '#884444', 'name': '#00aa00', 'number' : 'red'})
 
 charsheet_message = [
     ("", "Enter a "),
@@ -54,12 +57,12 @@ def select_occupation(session: PromptSession, name:str):
 
     occupation_message = [
         ("", "Which occupation does "),
-        ("green", name),
+        ("class:name", name),
         ("",  " practice? ")
     ]
     occupations = list(OCCUPATIONS1920.keys())
     valid_choices = occupations + ["Random",  ""]
-    occupation_choices = WordCompleter(valid_choices, ignore_case=True, WORD=True)
+    occupation_choices = WordCompleter(valid_choices, ignore_case=True)
 
     occupation = session.prompt(
         occupation_message,
@@ -71,6 +74,48 @@ def select_occupation(session: PromptSession, name:str):
     occupation = interpret_occupation(occupation)
 
     return OCCUPATIONS1920[interpret_occupation(occupation)]
+
+def _prompt_for_skill(session: PromptSession, message: str, skills:list):
+    skill_choices = WordCompleter(skills, ignore_case=True)
+
+    skill = session.prompt(
+        message,
+        style=charsheet_prompt_style,
+        completer=skill_choices,
+        validator=SkillValidator(skills),
+    )
+    return interpret_skill(skill, skills)
+
+
+
+def pick_skills(occupation: Occupation, options:list):
+
+    pick_message = [
+        ("", "You still have "),
+        ("class:number", str(occupation.skill_choices)),
+    ]
+    
+    if occupation.skill_choices > 1:
+        pick_message.append(("", " skills"))
+    else: pick_message.append(("", " skill"))
+    
+    pick_message.append(("", " to pick you've trained in your occupation.\nWhat skill do you choose? "))
+    skill = _prompt_for_skill(session, pick_message, options)
+    occupation.skills.append(skill)
+    occupation.skill_choices -= 1
+
+def spend_occupational_sp(session: PromptSession, character: Character, occupation: Occupation):
+
+    spend_message = [
+        ("", "You have "),
+        ("class:number", str(character.occupational_skill_points)),
+        ("", " occupational skill points left. What will you spend them on? ")
+    ]
+    skill_choices = occupation.skills
+    skill = _prompt_for_skill(session, spend_message, skill_choices)
+    
+    # Then ask for skillpoints to spend
+    raise NotImplementedError
 
 
 if __name__ == "__main__":
@@ -99,6 +144,13 @@ if __name__ == "__main__":
         # Add occupation and skill pool
         occupation = select_occupation(session, character.full_name)
         character.add_occupation(occupation)
+
+        while occupation.skill_choices > 0:
+            pick_skills(occupation, list(SKILLS1920.keys()))
+
+        while character.occupational_skill_points > 0:
+            spend_occupational_sp(session, character, occupation)
+
         save_character(character, char_sheet_file)
     
     if character_loaded:

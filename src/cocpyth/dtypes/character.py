@@ -95,7 +95,6 @@ class Character:
         stats_table = pd.DataFrame(stats, index=[0])
         stats_table.columns = [c.capitalize() for c in stats_table.columns]
         
-        print(get_terminal_size())
         if get_terminal_size()[0] < 150:
             return tabulate(stats_table.T, headers=["Stat","Value"], tablefmt='psql')
         else: return tabulate(stats_table, headers="keys", showindex=False, tablefmt='psql')
