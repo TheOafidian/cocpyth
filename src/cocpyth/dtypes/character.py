@@ -1,28 +1,28 @@
 from enum import Enum
 from pydantic.dataclasses import dataclass
 from cocpyth.dtypes.dice import d4, d6
-from cocpyth.dtypes.skills import SKILLS1920
-from cocpyth.dtypes.occupations import Occupation
+from cocpyth.dtypes.skill import SKILLS1920
+from cocpyth.dtypes.occupation import Occupation
 from cocpyth.utils.weird_math import cthulhu_round
-import cocpyth.dtypes.stats as stats
+import cocpyth.dtypes.stat as stat
 
 
 @dataclass
 class Character:
     first_name: str
     last_name: str
-    sanity: stats.Sanity = stats.Sanity()
-    strength: stats.Strength = stats.Strength()
-    dexterity: stats.Dexterity = stats.Dexterity()
-    size: stats.Size = stats.Size()
-    constitution: stats.Constitution = stats.Constitution()
-    intelligence: stats.Intelligence = stats.Intelligence()
-    education: stats.Education = stats.Education()
-    power: stats.Power = stats.Power()
-    appearance: stats.Appearance = stats.Appearance()
-    luck: stats.Luck = stats.Luck()
-    hp: stats.Hitpoints = stats.Hitpoints()
-    mp: stats.Magicpoints = stats.Magicpoints()
+    sanity: stat.Sanity = stat.Sanity()
+    strength: stat.Strength = stat.Strength()
+    dexterity: stat.Dexterity = stat.Dexterity()
+    size: stat.Size = stat.Size()
+    constitution: stat.Constitution = stat.Constitution()
+    intelligence: stat.Intelligence = stat.Intelligence()
+    education: stat.Education = stat.Education()
+    power: stat.Power = stat.Power()
+    appearance: stat.Appearance = stat.Appearance()
+    luck: stat.Luck = stat.Luck()
+    hp: stat.Hitpoints = stat.Hitpoints()
+    mp: stat.Magicpoints = stat.Magicpoints()
 
     def __post_init__(self):
         self.full_name = self.first_name + " " + self.last_name

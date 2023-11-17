@@ -5,7 +5,7 @@ from prompt_toolkit.completion import WordCompleter
 
 from cocpyth.utils.io import save_character, load_character
 from cocpyth.generator.character import CharacterGenerator
-from cocpyth.dtypes.occupations import OCCUPATIONS1920
+from cocpyth.dtypes.occupation import OCCUPATIONS1920
 from cocpyth.prompts.validation import OccupationValidator, YesNoValidator, GenderOrRandomValidator, gender_or_random, yes_or_no, interpret_occupation
 
 DEFAULT_JSON = "character.json"
