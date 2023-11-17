@@ -1,8 +1,9 @@
 from enum import Enum
 from pydantic.dataclasses import dataclass
-from cocpyth.dtypes.skills import SKILLS1920
-from cocpyth.utils.weird_math import cthulhu_round
 from cocpyth.dtypes.dice import d4, d6
+from cocpyth.dtypes.skills import SKILLS1920
+from cocpyth.dtypes.occupations import Occupation
+from cocpyth.utils.weird_math import cthulhu_round
 import cocpyth.dtypes.stats as stats
 
 
@@ -57,7 +58,10 @@ class Character:
         if STR > SIZ and DEX > SIZ:
             return 9
         return 8
-        
+    
+    def add_occupation(self, occupation: Occupation):
+        print(occupation)
+        raise NotImplementedError
 
 class GenderEnum(str, Enum):
     M = "male"

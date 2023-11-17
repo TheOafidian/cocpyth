@@ -9,7 +9,7 @@ from cocpyth.dtypes.character import GenderEnum, Character
 class CharacterGenerator():
     rstats: bool
     rgender: Union[bool, GenderEnum]
-    rname: bool
+    rname: Union[bool,str]
 
     def generate(self):
 
@@ -19,6 +19,8 @@ class CharacterGenerator():
         if not self.rname:
             fname = prompt("First name?", type=str)
             lname = prompt("Last name?", type=str)
+        elif type(self.rname) == str:
+            fname, lname = self.rname.split(" ", 1)
         else: 
             fname, lname = generate_name(self.rgender)
         if self.rstats:

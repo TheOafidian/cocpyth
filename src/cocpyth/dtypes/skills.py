@@ -1,6 +1,6 @@
 import yaml
 import importlib.resources
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
 from cocpyth.utils.weird_math import cthulhu_round
 
@@ -70,6 +70,9 @@ class SkillDict(dict):
         safe_keys = {k.lower().replace(" ", "_"): v for k, v in self.items()}
         self.__dict__ = safe_keys
 
+class SkillPoints(BaseModel):
+    number: int    
+    choices: List[Skill]
 
 def build_skills(setting: str) -> [Skill]:
     setting_skills = skills[setting]

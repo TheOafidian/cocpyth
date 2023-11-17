@@ -2,35 +2,42 @@ import yaml
 import importlib.resources
 from typing import Optional, List
 from pydantic import BaseModel, computed_field, TypeAdapter
-from cocpyth.dtypes.skills import Skill, SkillDict, SETTING_SKILLS
 from cocpyth.utils.weird_math import cthulhu_round
 
 
 occupations = yaml.safe_load(importlib.resources.open_text("cocpyth.data", "occupations.yaml"))
 coc_settings = occupations.keys()
 
-class Occupation(BaseModel):
+class OccupationConstructor(BaseModel):
     name: str
-    skill_choices: List[str]
     points: str
+    skills: List[str]
     description: Optional[str] = None
 
-    @computed_field
-    @property
-    def skill_choices(self) -> int:
-        return self.skills.count("Any")
-    
-    
-    @computed_field
-    @property
-    def social_choices(self) -> int:
-        return self.skills.count("Interpersonal")
-    
+    def calculate_points(points:str):
+        return 120
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.skills = [sk for sk in self.skills if sk not in ["Any","Interpersonal"]]
+class Occupation(BaseModel):
+    name: str
+    points: int
+    skill_choices: int
+    social_choices: int
+    skills: List[str]
+    description: Optional[str] = None
+
+
+    def __init__(self, constructor: OccupationConstructor):
         
+        skills = [sk for sk in constructor.skills if sk not in ["Any", "Interpersonal"]]
+        points = constructor.calculate_points()
+        super().__init__(
+            name=constructor.name,
+            points=points,
+            skills=skills,
+            skill_choices=constructor.skills.count("Any"),
+            social_choices=constructor.skills.count("Interpersonal"),
+            description=constructor.description,
+        )           
         
 class OccupationDict(dict):
     def __init__(self, *args, **kwargs):
@@ -41,7 +48,9 @@ class OccupationDict(dict):
 
 def build_occupations(setting: str) -> [Occupation]:
     setting_occupations = occupations[setting]
-    setting_occupations = {o["name"]: Occupation(**o) for o in setting_occupations}
+    setting_occupations = {o["name"]: OccupationConstructor(**o) for o in setting_occupations}
+    for k, constructor in setting_occupations.items():
+        setting_occupations[k] = Occupation(constructor)
     return OccupationDict(setting_occupations)
 
 

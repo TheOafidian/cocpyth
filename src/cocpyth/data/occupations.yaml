@@ -2,7 +2,7 @@ coc1920:
   - name: Antiquarian
     credit: 30-70
     points: Education*4
-    skill_choices:
+    skills:
       - Appraise
       - History
       - Library Use
