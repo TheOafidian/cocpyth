@@ -28,15 +28,14 @@ charsheet_message = [
 ]
 
 
-random_generation_message = [("", "Generate character randomly? ")]
 
 def character_generation_prompts(session: PromptSession):
 
     random_gender_message = [
-        ("", "Which biological gender? [F/M/Random]\n"),
+        ("", "Which biological gender? "),
     ]
 
-    random_name_message = [("", "Generate a random name?\n")]
+    random_name_message = [("", "Generate a random name? ")]
 
     rgender = session.prompt(random_gender_message, style=charsheet_prompt_style,placeholder="Random", validator=GenderOrRandomValidator())
     rgender = gender_or_random(rgender)
@@ -44,7 +43,11 @@ def character_generation_prompts(session: PromptSession):
     fname = session.prompt(random_name_message, style=charsheet_prompt_style, validator=YesNoValidator(), placeholder="Y")
     rname = yes_or_no(fname)
 
-    return CharacterGenerator(rstats=True, rgender=rgender, rname=rname).generate()
+    random_stats_message = [("", "Generate character's stats randomly? ")]
+    rstats = session.prompt(random_stats_message, style=charsheet_prompt_style, validator=YesNoValidator(), placeholder="Y")
+    rstats = yes_or_no(rstats)
+
+    return CharacterGenerator(rstats=rstats, rgender=rgender, rname=rname).generate()
 
 
 def select_occupation(session: PromptSession, name:str):
@@ -52,7 +55,7 @@ def select_occupation(session: PromptSession, name:str):
     occupation_message = [
         ("", "Which occupation does "),
         ("green", name),
-        ("",  " practice?\n")
+        ("",  " practice? ")
     ]
     occupations = list(OCCUPATIONS1920.keys())
     valid_choices = occupations + ["Random",  ""]
@@ -88,12 +91,17 @@ if __name__ == "__main__":
         except AttributeError:
             print(emphasize("", char_sheet_file, f" is not a valid character file. Defaulting to {DEFAULT_JSON}."))
             char_sheet_file = DEFAULT_JSON
-
+    
     if not character_loaded:
         character = character_generation_prompts(session)
+        print("\n", character.format_stats())
+        
         # Add occupation and skill pool
         occupation = select_occupation(session, character.full_name)
         character.add_occupation(occupation)
         save_character(character, char_sheet_file)
-
-    # generation_method = session.prompt(random_generation_message, style=charsheet_prompt_style)
+    
+    if character_loaded:
+        print("\n", character.format_stats())
+        # TODO: implement different commands: roll, improve, exit
+        raise NotImplementedError
