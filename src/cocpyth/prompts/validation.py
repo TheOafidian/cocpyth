@@ -73,13 +73,28 @@ def interpret_skill(input, valid_choices:list):
 
 
 class SkillValidator(Validator):    
+    """Validate if skill exists in setting"""
 
     def __init__(self, choices:list) -> None:
         super().__init__()
         self.valid_choices = choices
 
-    """Validate if skill exists in setting"""
     def validate(self, document: Document) -> None:
         txt = document.text
         if txt:
             interpret_skill(txt, self.valid_choices)
+
+class MaxNumberValidator(Validator):
+    """Validate if number is below treshold"""
+    def __init__(self, max:int) -> None:
+        super().__init__()
+        self.max_num = int(max)
+
+
+    def validate(self, document: Document) -> None:
+        txt = document.text
+        
+        if txt and not txt.isdigit():
+            raise ValidationError(message="Not a number.")
+        if txt and txt.isdigit() and int(txt) > self.max_num:
+            raise ValidationError(message="You're trying to use more than you have.")

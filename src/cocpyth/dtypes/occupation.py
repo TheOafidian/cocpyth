@@ -25,9 +25,9 @@ class Occupation(BaseModel):
 
     def __init__(self, constructor: OccupationConstructor):
         
-        skills = [sk.strip().capitalize() for sk in constructor.skills if sk.strip().capitalize() not in ["Any", "Interpersonal"]]
+        skills = [sk.strip() for sk in constructor.skills if sk.strip() not in ["Any", "Interpersonal"]]
         super().__init__(
-            name=constructor.name.strip().capitalize(),
+            name=constructor.name.strip(),
             points_rule=constructor.points.strip(),
             skills=skills,
             skill_choices=constructor.skills.count("Any"),

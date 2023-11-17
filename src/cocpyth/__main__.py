@@ -1,5 +1,6 @@
 import os
-from prompt_toolkit import PromptSession, HTML, print_formatted_text as print
+import random
+from prompt_toolkit import prompt, HTML, print_formatted_text as print
 from prompt_toolkit.styles import Style
 from prompt_toolkit.completion import WordCompleter
 
@@ -9,7 +10,7 @@ from cocpyth.dtypes.occupation import OCCUPATIONS1920
 from cocpyth.dtypes.skill import SKILLS1920
 from cocpyth.dtypes.character import Character
 from cocpyth.dtypes.occupation import Occupation
-from cocpyth.prompts.validation import OccupationValidator, SkillValidator, YesNoValidator, GenderOrRandomValidator, gender_or_random, yes_or_no, interpret_occupation, interpret_skill
+from cocpyth.prompts.validation import MaxNumberValidator, OccupationValidator, SkillValidator, YesNoValidator, GenderOrRandomValidator, gender_or_random, yes_or_no, interpret_occupation, interpret_skill
 
 DEFAULT_JSON = "character.json"
 
@@ -32,7 +33,7 @@ charsheet_message = [
 
 
 
-def character_generation_prompts(session: PromptSession):
+def character_generation_prompts():
 
     random_gender_message = [
         ("", "Which biological gender? "),
@@ -40,20 +41,20 @@ def character_generation_prompts(session: PromptSession):
 
     random_name_message = [("", "Generate a random name? ")]
 
-    rgender = session.prompt(random_gender_message, style=charsheet_prompt_style,placeholder="Random", validator=GenderOrRandomValidator())
+    rgender = prompt(random_gender_message, style=charsheet_prompt_style,placeholder="Random", validator=GenderOrRandomValidator())
     rgender = gender_or_random(rgender)
 
-    fname = session.prompt(random_name_message, style=charsheet_prompt_style, validator=YesNoValidator(), placeholder="Y")
+    fname = prompt(random_name_message, style=charsheet_prompt_style, validator=YesNoValidator(), placeholder="Y")
     rname = yes_or_no(fname)
 
     random_stats_message = [("", "Generate character's stats randomly? ")]
-    rstats = session.prompt(random_stats_message, style=charsheet_prompt_style, validator=YesNoValidator(), placeholder="Y")
+    rstats = prompt(random_stats_message, style=charsheet_prompt_style, validator=YesNoValidator(), placeholder="Y")
     rstats = yes_or_no(rstats)
 
     return CharacterGenerator(rstats=rstats, rgender=rgender, rname=rname).generate()
 
 
-def select_occupation(session: PromptSession, name:str):
+def select_occupation(name:str):
 
     occupation_message = [
         ("", "Which occupation does "),
@@ -64,7 +65,7 @@ def select_occupation(session: PromptSession, name:str):
     valid_choices = occupations + ["Random",  ""]
     occupation_choices = WordCompleter(valid_choices, ignore_case=True)
 
-    occupation = session.prompt(
+    occupation = prompt(
         occupation_message,
         style=charsheet_prompt_style,
         completer=occupation_choices,
@@ -75,17 +76,27 @@ def select_occupation(session: PromptSession, name:str):
 
     return OCCUPATIONS1920[interpret_occupation(occupation)]
 
-def _prompt_for_skill(session: PromptSession, message: str, skills:list):
-    skill_choices = WordCompleter(skills, ignore_case=True)
+def _prompt_for_skill(message: str, skills:list):
+    FORBIDDEN_SKILLS = {"Cthulhu Mythos"}
+    skills = [s for s in skills if s not in FORBIDDEN_SKILLS]
+    skills.append("Random")
+    skills.append("")
+    skill_choices = WordCompleter(skills)
 
-    skill = session.prompt(
+    skill = prompt(
         message,
         style=charsheet_prompt_style,
         completer=skill_choices,
         validator=SkillValidator(skills),
+        placeholder="Random"
     )
-    return interpret_skill(skill, skills)
+    if skill == "Random" or skill == "":
+        skills.remove("Random")
+        skills.remove("")
+        skill = random.choice(skills)
+        print(f"\nPicked {skill}")
 
+    return interpret_skill(skill, skills)
 
 
 def pick_skills(occupation: Occupation, options:list):
@@ -100,11 +111,11 @@ def pick_skills(occupation: Occupation, options:list):
     else: pick_message.append(("", " skill"))
     
     pick_message.append(("", " to pick you've trained in your occupation.\nWhat skill do you choose? "))
-    skill = _prompt_for_skill(session, pick_message, options)
+    skill = _prompt_for_skill(pick_message, options)
     occupation.skills.append(skill)
     occupation.skill_choices -= 1
 
-def spend_occupational_sp(session: PromptSession, character: Character, occupation: Occupation):
+def spend_occupational_sp(character: Character, occupation: Occupation):
 
     spend_message = [
         ("", "You have "),
@@ -112,18 +123,27 @@ def spend_occupational_sp(session: PromptSession, character: Character, occupati
         ("", " occupational skill points left. What will you spend them on? ")
     ]
     skill_choices = occupation.skills
-    skill = _prompt_for_skill(session, spend_message, skill_choices)
-    
+    skill = _prompt_for_skill(spend_message, skill_choices)
+    skill = character.skills[skill]
+    max_points_to_spend = min(character.occupational_skill_points, 100 - skill.current)
     # Then ask for skillpoints to spend
-    raise NotImplementedError
-
+    amount_sp = prompt(
+        f"How many points? You can spend {max_points_to_spend}. ",
+        validator=MaxNumberValidator(min(character.occupational_skill_points, 100 - skill.current)),
+        validate_while_typing=False,
+    )
+    try:
+        amount_sp = int(amount_sp)
+        character.occupational_skill_points -= amount_sp
+        skill += amount_sp
+    except ValueError:
+        pass
 
 if __name__ == "__main__":
 
-    session = PromptSession()
     character_loaded = False
 
-    char_sheet_file = session.prompt(charsheet_message, style=charsheet_prompt_style, placeholder=DEFAULT_JSON)
+    char_sheet_file = prompt(charsheet_message, style=charsheet_prompt_style, placeholder=DEFAULT_JSON)
     if char_sheet_file.lower() in ["y", "", "yes"]:
         char_sheet_file = DEFAULT_JSON
 
@@ -138,18 +158,18 @@ if __name__ == "__main__":
             char_sheet_file = DEFAULT_JSON
     
     if not character_loaded:
-        character = character_generation_prompts(session)
+        character = character_generation_prompts()
         print("\n", character.format_stats())
         
         # Add occupation and skill pool
-        occupation = select_occupation(session, character.full_name)
+        occupation = select_occupation(character.full_name)
         character.add_occupation(occupation)
 
         while occupation.skill_choices > 0:
             pick_skills(occupation, list(SKILLS1920.keys()))
 
         while character.occupational_skill_points > 0:
-            spend_occupational_sp(session, character, occupation)
+            spend_occupational_sp(character, occupation)
 
         save_character(character, char_sheet_file)
     
