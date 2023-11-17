@@ -1,5 +1,5 @@
 import os
-from prompt_toolkit import prompt, PromptSession, HTML, print_formatted_text as print
+from prompt_toolkit import PromptSession, HTML, print_formatted_text as print
 from prompt_toolkit.styles import Style
 from prompt_toolkit.completion import WordCompleter
 
@@ -19,7 +19,7 @@ def default_param(string: str):
     return f'default: [{string}]'
 
 
-charsheet_prompt_style = Style.from_dict({'': '', 'file': '#884444', 'default': '#00aa00'})
+charsheet_prompt_style = Style.from_dict({'': '', 'file': '#884444', 'green': '#00aa00'})
 
 charsheet_message = [
     ("", "Enter a "),
@@ -50,7 +50,9 @@ def character_generation_prompts(session: PromptSession):
 def select_occupation(session: PromptSession, name:str):
 
     occupation_message = [
-        ("", f"Which occupation does {name} practice?\n"),
+        ("", "Which occupation does "),
+        ("green", name),
+        ("",  " practice?\n")
     ]
     occupations = list(OCCUPATIONS1920.keys())
     valid_choices = occupations + ["Random",  ""]

@@ -1,7 +1,7 @@
 import yaml
 import importlib.resources
 from typing import Optional, List
-from pydantic import BaseModel, computed_field, TypeAdapter
+from pydantic import BaseModel
 from cocpyth.utils.weird_math import cthulhu_round
 
 
@@ -14,12 +14,9 @@ class OccupationConstructor(BaseModel):
     skills: List[str]
     description: Optional[str] = None
 
-    def calculate_points(points:str):
-        return 120
-
 class Occupation(BaseModel):
     name: str
-    points: int
+    points_rule: str
     skill_choices: int
     social_choices: int
     skills: List[str]
@@ -28,17 +25,17 @@ class Occupation(BaseModel):
 
     def __init__(self, constructor: OccupationConstructor):
         
-        skills = [sk for sk in constructor.skills if sk not in ["Any", "Interpersonal"]]
-        points = constructor.calculate_points()
+        skills = [sk.strip().capitalize() for sk in constructor.skills if sk.strip().capitalize() not in ["Any", "Interpersonal"]]
         super().__init__(
-            name=constructor.name,
-            points=points,
+            name=constructor.name.strip().capitalize(),
+            points_rule=constructor.points.strip(),
             skills=skills,
             skill_choices=constructor.skills.count("Any"),
             social_choices=constructor.skills.count("Interpersonal"),
             description=constructor.description,
         )           
         
+
 class OccupationDict(dict):
     def __init__(self, *args, **kwargs):
         super(OccupationDict, self).__init__(*args, **kwargs)

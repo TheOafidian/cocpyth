@@ -2,8 +2,8 @@ import yaml
 from yaml import Loader
 from functools import partial
 from cocpyth.dtypes.character import Character
-from cocpyth.dtypes.skills import Skill, SkillDict
-from cocpyth.dtypes.stats import (
+from cocpyth.dtypes.skill import Skill, SkillDict
+from cocpyth.dtypes.stat import (
     Stat,
     Strength,
     Sanity,

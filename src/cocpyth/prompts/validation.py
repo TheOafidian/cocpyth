@@ -1,7 +1,7 @@
 import random
 from prompt_toolkit.document import Document
 from prompt_toolkit.validation import Validator, ValidationError
-from cocpyth.dtypes.occupations import OCCUPATIONS1920
+from cocpyth.dtypes.occupation import OCCUPATIONS1920
 import cocpyth.prompts.default_responses as responses
 
 def yes_or_no(response:str):

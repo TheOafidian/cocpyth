@@ -58,10 +58,12 @@ class Character:
         if STR > SIZ and DEX > SIZ:
             return 9
         return 8
+
     
     def add_occupation(self, occupation: Occupation):
-        print(occupation)
+        parts= occupation.points_rule.split(",")
         raise NotImplementedError
+
 
 class GenderEnum(str, Enum):
     M = "male"
