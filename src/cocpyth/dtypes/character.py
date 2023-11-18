@@ -40,6 +40,7 @@ class Character:
         self.skills.dodge.set(self.dexterity.current/2)
         self.damage_bonus, self.build = self._determine_build_db()
         self.moverate = self._determine_move_rate()
+        self.personal_skill_points = self.intelligence * 10
 
     def _determine_build_db(self):
         physique = self.strength.current + self.size.current
@@ -79,6 +80,9 @@ class Character:
         self.occupational_skill_points = total_skill_points
 
 
+    def list_skills(self):
+        return list(self.skills.keys())
+
     def stats_to_record(self):
         """Return the current base stats of the character as a single dictionary item"""
         settings = [ k for k in stat.__dict__.keys() if k.endswith("_settings")]
@@ -99,6 +103,28 @@ class Character:
             return tabulate(stats_table.T, headers=["Stat","Value"], tablefmt='psql')
         else: return tabulate(stats_table, headers="keys", showindex=False, tablefmt='psql')
 
+
+    def _add_skillpoints(self, skill:str, amount:int):
+
+        if skill not in self.list_skills():
+            raise KeyError(f"Skill {skill} is not defined.")
+        if self.skills[skill] + amount > self.skills[skill].max:
+            raise OverflowError(f"Skill can't be more than {self.skills[skill].max}")
+        self.skills[skill] += amount
+
+
+    def spend_occupational_skill_points(self, skill:str, amount:int):
+        if self.occupational_skill_points - amount < 0:
+            raise OverflowError(f"Cannot spend {amount} skill points, while only having {self.occupational_skill_points} left. ")
+        self._add_skillpoints(skill, amount)
+        self.occupational_skill_points -= amount
+
+
+    def spend_personal_skill_points(self, skill:str, amount:int):
+        if self.personal_skill_points - amount < 0:
+            raise OverflowError(f"Cannot spend {amount} skill points, while only having {self.personal_skill_points} left. ")
+        self._add_skillpoints(skill, amount)
+        self.personal_skill_points -= amount
 
 
 class GenderEnum(str, Enum):

@@ -4,15 +4,27 @@ from prompt_toolkit import prompt, HTML, print_formatted_text as print
 from prompt_toolkit.styles import Style
 from prompt_toolkit.completion import WordCompleter
 
+from cocpyth import POSSIBLE_COMMANDS, DEFAULT_JSON
 from cocpyth.utils.io import save_character, load_character
 from cocpyth.generator.character import CharacterGenerator
 from cocpyth.dtypes.occupation import OCCUPATIONS1920
 from cocpyth.dtypes.skill import SKILLS1920
 from cocpyth.dtypes.character import Character
 from cocpyth.dtypes.occupation import Occupation
-from cocpyth.prompts.validation import MaxNumberValidator, OccupationValidator, SkillValidator, YesNoValidator, GenderOrRandomValidator, gender_or_random, yes_or_no, interpret_occupation, interpret_skill
+from cocpyth.prompts.validation import (
+    CommandValidator, 
+    MaxNumberValidator, 
+    OccupationValidator, 
+    SkillValidator, 
+    YesNoValidator, 
+    GenderOrRandomValidator, 
+    gender_or_random, 
+    yes_or_no, 
+    interpret_occupation, 
+    interpret_skill,
+    interpret_command
+)
 
-DEFAULT_JSON = "character.json"
 
 
 def emphasize(pre: str, emphasis: str, post: str):
@@ -124,20 +136,61 @@ def spend_occupational_sp(character: Character, occupation: Occupation):
     ]
     skill_choices = occupation.skills
     skill = _prompt_for_skill(spend_message, skill_choices)
-    skill = character.skills[skill]
-    max_points_to_spend = min(character.occupational_skill_points, 100 - skill.current)
+    improvement_possible = character.skills[skill].max - character.skills[skill].current
+    max_points_to_spend = min(character.occupational_skill_points, improvement_possible)
     # Then ask for skillpoints to spend
     amount_sp = prompt(
         f"How many points? You can spend {max_points_to_spend}. ",
-        validator=MaxNumberValidator(min(character.occupational_skill_points, 100 - skill.current)),
+        validator=MaxNumberValidator(min(character.occupational_skill_points, improvement_possible)),
         validate_while_typing=False,
     )
-    try:
-        amount_sp = int(amount_sp)
-        character.occupational_skill_points -= amount_sp
-        skill += amount_sp
-    except ValueError:
-        pass
+    character.spend_occupational_skill_points(skill, int(amount_sp))
+
+
+def spend_personal_sp(character: Character):
+
+    spend_message = [
+        ("", "You have "),
+        ("class:number", str(character.personal_skill_points)),
+        ("", " personal skill points left. What will you spend them on? ")
+    ]
+    skill_choices = list(character.skills.keys())
+    skill = _prompt_for_skill(spend_message, skill_choices)
+    improvement_possible = character.skills[skill].max - character.skills[skill].current
+    max_points_to_spend = min(character.personal_skill_points, improvement_possible)
+    # Then ask for skillpoints to spend
+    amount_sp = prompt(
+        f"How many points? You can spend {max_points_to_spend}. ",
+        validator=MaxNumberValidator(min(character.personal_skill_points, improvement_possible)),
+        validate_while_typing=False,
+    )
+    character.spend_personal_skill_points(skill, int(amount_sp))
+
+
+def command_switch(cmd:str, character:Character):
+    if cmd == "EXIT":
+        exit(1)
+    if cmd == "ROLL":
+        msg = "Which skill to roll? "
+        skill = _prompt_for_skill(msg, character.list_skills())
+        interpret_skill(skill, character.list_skills())
+        result = character.skills[skill].roll()
+        print(result)
+
+def prompt_for_command(character:Character):
+
+    completer = WordCompleter(POSSIBLE_COMMANDS, ignore_case=True)
+
+    command = prompt(
+        "",
+        completer=completer,
+        placeholder="roll",
+        validator=CommandValidator(),
+        validate_while_typing=False
+    )
+    command = interpret_command(command)
+    command_switch(command, character)
+    
 
 if __name__ == "__main__":
 
@@ -171,9 +224,15 @@ if __name__ == "__main__":
         while character.occupational_skill_points > 0:
             spend_occupational_sp(character, occupation)
 
+        while character.personal_skill_points > 0:
+            spend_personal_sp(character)
+
         save_character(character, char_sheet_file)
     
     if character_loaded:
         print("\n", character.format_stats())
-        # TODO: implement different commands: roll, improve, exit
-        raise NotImplementedError
+    
+    command = prompt_for_command(character)
+    while command != "exit":
+        command = prompt_for_command(character)
+        

@@ -2,6 +2,7 @@ import yaml
 import importlib.resources
 from typing import Optional, List
 from pydantic import BaseModel, PositiveInt, NonNegativeInt
+from cocpyth.dtypes.dice import d100
 from cocpyth.utils.weird_math import cthulhu_round
 
 skills = yaml.safe_load(importlib.resources.open_text("cocpyth.data", "skills.yaml"))
@@ -33,11 +34,8 @@ class Skill(BaseModel):
 
     def __add__(self, x):
         temp = self.copy()
-        temp.current += x
-        temp.half = cthulhu_round(temp.current / 2)
-        temp.fifth = cthulhu_round(temp.current / 5)
-        return temp
-
+        return temp.current + x
+        
     def __iadd__(self, x):
         self.current += x
         self._set_half_and_fifth()
@@ -45,11 +43,8 @@ class Skill(BaseModel):
 
     def __sub__(self, x):
         temp = self.copy()
-        temp.current -= x
-        temp.half = cthulhu_round(temp.current / 2)
-        temp.fifth = cthulhu_round(temp.current / 5)
-        return temp
-
+        return temp.current - x
+        
     def __isub__(self, x):
         self.current -= x
         self._set_half_and_fifth()
@@ -57,12 +52,27 @@ class Skill(BaseModel):
     
     def __truediv__(self, x):
         temp = self.copy()
-        temp.current = cthulhu_round(temp.current / x) 
-        return temp
-
+        return cthulhu_round(temp.current / x) 
+        
     def __idiv__(self, x):
         self.current = cthulhu_round(self.current / x)
         return self
+    
+
+    def roll(self):
+        result = d100.roll()
+        msg = "FAIL"
+        if result < self.current:
+            msg = "SUCCESS"
+        if result < self.half:
+            msg = "HARD SUCCESS"
+        if result < self.fifth:
+            msg = "EXTREME SUCCESS"
+        if result == 1:
+            msg = "CRITICAL SUCCESS"
+        if result > 95:
+            msg = "FUMBLE"
+        return f"{result} ({msg}) | {self.name} ({self.current}|{self.half}|{self.fifth})"
 
 class SkillDict(dict):
     def __init__(self, *args, **kwargs):

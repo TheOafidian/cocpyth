@@ -1,8 +1,8 @@
 import random
 from prompt_toolkit.document import Document
 from prompt_toolkit.validation import Validator, ValidationError
+from cocpyth import POSSIBLE_COMMANDS
 from cocpyth.dtypes.occupation import OCCUPATIONS1920
-from cocpyth.dtypes.skill import SKILLS1920
 import cocpyth.prompts.default_responses as responses
 
 def yes_or_no(response:str):
@@ -98,3 +98,20 @@ class MaxNumberValidator(Validator):
             raise ValidationError(message="Not a number.")
         if txt and txt.isdigit() and int(txt) > self.max_num:
             raise ValidationError(message="You're trying to use more than you have.")
+        
+
+def interpret_command(cmd):
+    res = cmd.strip().upper()
+    if res in POSSIBLE_COMMANDS:
+        return res
+    if res == "":
+        return "ROLL"
+    raise ValidationError("Not a known command.")
+
+class CommandValidator(Validator):
+
+    def validate(self, document:Document) -> None:
+        txt = document.text
+
+        if txt:
+            interpret_command(txt)
