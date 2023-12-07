@@ -10,6 +10,16 @@ class Stat(BaseModel):
     max: PositiveInt = 100
     min: NonNegativeInt = 0
     current: NonNegativeInt = 0
+    half: NonNegativeInt = 10
+    fifth: NonNegativeInt = 4
+    
+    def _set_half_and_fifth(self):
+        self.half = cthulhu_round(self.current / 2)
+        self.fifth = cthulhu_round(self.current / 5)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._set_half_and_fifth()
 
     def get(self):
         if self.current <= 0:

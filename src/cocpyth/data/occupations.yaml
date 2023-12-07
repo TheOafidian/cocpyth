@@ -37,3 +37,26 @@ coc1920:
       - Science (Pharmacy)
       - Any
       - Any
+  - name: Journalist
+    credit: 9-30
+    points: Education*4
+    skills:
+      - Interpersonal
+      - Language (Own)
+      - Arts and Crafts (Photography)
+      - History
+      - Library Use
+      - Psychology
+      - Any
+      - Any
+  - name: Nurse
+    credit: 9-30
+    points: Education*4
+    skills:
+      - Interpersonal
+      - Listen
+      - First Aid
+      - Medicine
+      - Science (Biology)
+      - Science (Chemistry)
+      - Spot Hidden

@@ -34,8 +34,11 @@ class Character:
     def __post_init__(self):
         self.full_name = self.first_name + " " + self.last_name
         self.sanity.current = self.power.current
+        self.sanity.max = self.sanity.current
         self.hp.current = cthulhu_round((self.constitution.current + self.size.current) / 10)
-        self.mp.current = self.power.current / 5
+        self.hp.max = self.hp.current
+        self.mp.current = cthulhu_round(self.power.current / 5)
+        self.mp.max = self.mp.current
         self.skills = SKILLS1920
         self.skills.dodge.set(self.dexterity.current/2)
         self.damage_bonus, self.build = self._determine_build_db()

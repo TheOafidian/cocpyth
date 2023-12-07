@@ -15,6 +15,8 @@ class Dice:
         for i in range(x):
             results.append(random.randint(1, self.max))
         return sum(results)
+    def __repr__(self) -> str:
+        return f"d{self.max}"
 
 
 d100 = Dice(100)

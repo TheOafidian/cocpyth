@@ -12,6 +12,9 @@ coc1920:
   - name: Arts and Crafts
     current: 5
     specialization: true
+  - name: Arts and Crafts (Photography)
+    current: 5
+    specialization: true
   - name: Artillery
     current: 1
     uncommon: true
