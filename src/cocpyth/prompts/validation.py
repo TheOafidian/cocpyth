@@ -3,6 +3,7 @@ from prompt_toolkit.document import Document
 from prompt_toolkit.validation import Validator, ValidationError
 from cocpyth import POSSIBLE_COMMANDS
 from cocpyth.dtypes.occupation import OCCUPATIONS1920
+from cocpyth.dtypes.character import GenderEnum
 import cocpyth.prompts.default_responses as responses
 
 def yes_or_no(response:str):
@@ -34,9 +35,9 @@ def gender_or_random(response:str):
 
     res = response.lower().strip()
     if res in responses.GENDERM:
-        return "M"
+        return GenderEnum.M
     if res in responses.GENDERF:
-        return "F"
+        return GenderEnum.F
     if res in responses.RANDOM:
         return True
     return False

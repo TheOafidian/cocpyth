@@ -89,7 +89,7 @@ def select_occupation(name:str):
     return OCCUPATIONS1920[interpret_occupation(occupation)]
 
 def _prompt_for_skill(message: str, skills:list):
-    FORBIDDEN_SKILLS = {"Cthulhu Mythos"}
+    FORBIDDEN_SKILLS = {"Cthulhu Mythos", "Credit Rating"}
     skills = [s for s in skills if s not in FORBIDDEN_SKILLS]
     skills.append("Random")
     skills.append("")
@@ -123,6 +123,7 @@ def pick_skills(occupation: Occupation, options:list):
     else: pick_message.append(("", " skill"))
     
     pick_message.append(("", " to pick you've trained in your occupation.\nWhat skill do you choose? "))
+    options = [option for option in options if option not in occupation.skills]
     skill = _prompt_for_skill(pick_message, options)
     occupation.skills.append(skill)
     occupation.skill_choices -= 1

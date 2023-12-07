@@ -56,6 +56,8 @@ coc1920:
   - name: Language (Own)
   - name: Language
     specialization: true
+  - name: Language (Latin)
+    specialization: true
   - name: Law
     current: 5
   - name: Library Use
@@ -89,6 +91,12 @@ coc1920:
   - name: Ride
     current: 5
   - name: Science
+    current: 1
+    specialization: true
+  - name: Science (Biology)
+    current: 1
+    specialization: true
+  - name: Science (Pharmacy)
     current: 1
     specialization: true
   - name: Sleight of Hand

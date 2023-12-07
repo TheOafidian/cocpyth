@@ -12,4 +12,28 @@ coc1920:
       - Language (Own)
       - Language
       - Any
-    
+  - name: Archaelogist
+    credit: 10-40
+    points: Education*4
+    skills:
+      - Appraise
+      - Archaelogy
+      - History
+      - Library Use
+      - Spot Hidden
+      - Navigate
+      - Science
+      - Language
+      - Mechanical Repair
+  - name: Doctor of Medicine
+    credit: 30-80
+    points: Education*4
+    skills:
+      - First Aid
+      - Language (Latin)
+      - Medicine
+      - Psychology
+      - Science (Biology)
+      - Science (Pharmacy)
+      - Any
+      - Any
