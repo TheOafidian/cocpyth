@@ -70,6 +70,9 @@ def fill_in_charactersheet(sheet_file, character):
     writer = PdfWriter()
 
     first_page = reader.pages[0]
+    second_page = reader.pages[1]
+    third_page = reader.pages[2]
+
     fields = reader.get_fields()
 
     writer.add_page(first_page)
@@ -78,7 +81,7 @@ def fill_in_charactersheet(sheet_file, character):
         'Investigators_Name' : character.full_name,
         'Occupation' : character.occupation,
         'Age' : "",
-        'StartingSanity' : character.sanity.max,
+        'StartingSanity' : character.sanity.current,
         'StartingHP' : character.hp.max,
         'StartingMagic' : character.mp.max,
         'StartingLuck' : character.luck.current,
@@ -101,7 +104,10 @@ def fill_in_charactersheet(sheet_file, character):
         writer.pages[0], to_update
     )
 
-    with open(f"character-sheet-filled.pdf", "wb") as fs:
+    writer.add_page(second_page)
+    writer.add_page(third_page)
+
+    with open(sheet_file, "wb") as fs:
         writer.write(fs)
 
 if __name__ == "__main__":

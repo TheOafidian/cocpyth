@@ -43,7 +43,7 @@ class Character:
         self.skills.dodge.set(self.dexterity.current/2)
         self.damage_bonus, self.build = self._determine_build_db()
         self.moverate = self._determine_move_rate()
-        self.personal_skill_points = self.intelligence * 10
+        self.personal_skill_points = (self.intelligence * 10).current
 
     def _determine_build_db(self):
         physique = self.strength.current + self.size.current
@@ -84,7 +84,7 @@ class Character:
 
 
     def list_skills(self):
-        return list(self.skills.keys())
+        return list(self.skills)
 
     def stats_to_record(self):
         """Return the current base stats of the character as a single dictionary item"""

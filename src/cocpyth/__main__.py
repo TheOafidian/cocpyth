@@ -4,7 +4,7 @@ from prompt_toolkit import prompt, HTML, print_formatted_text as print
 from prompt_toolkit.styles import Style
 from prompt_toolkit.completion import WordCompleter
 
-from cocpyth import POSSIBLE_COMMANDS, DEFAULT_JSON
+from cocpyth import POSSIBLE_COMMANDS, DEFAULT_JSON, DEFAULT_PDF
 from cocpyth.utils.io import save_character, load_character
 from cocpyth.generator.character import CharacterGenerator
 from cocpyth.dtypes.occupation import OCCUPATIONS1920
@@ -24,7 +24,7 @@ from cocpyth.prompts.validation import (
     interpret_skill,
     interpret_command
 )
-
+from cocpyth.utils.sheet import download_charactersheet, fill_in_charactersheet
 
 
 def emphasize(pre: str, emphasis: str, post: str):
@@ -165,7 +165,8 @@ def spend_personal_sp(character: Character):
         validator=MaxNumberValidator(min(character.personal_skill_points, improvement_possible)),
         validate_while_typing=False,
     )
-    character.spend_personal_skill_points(skill, int(amount_sp))
+    if amount_sp != "":
+        character.spend_personal_skill_points(skill, int(amount_sp))
 
 
 def command_switch(cmd:str, character:Character):
@@ -177,6 +178,17 @@ def command_switch(cmd:str, character:Character):
         interpret_skill(skill, character.list_skills())
         result = character.skills[skill].roll()
         print(result)
+    if cmd == "SAVE_SHEET":
+        char_sheet_file = prompt(charsheet_message, style=charsheet_prompt_style, placeholder=DEFAULT_PDF)
+        if char_sheet_file.lower() in ["y", "", "yes"]:
+            char_sheet_file = DEFAULT_PDF
+
+        color = prompt("Would you like a colored character sheet?", style=charsheet_prompt_style, validator=YesNoValidator(), placeholder="Y")
+        color = yes_or_no(color)
+
+        sheet = download_charactersheet(char_sheet_file, color=color)
+        fill_in_charactersheet(sheet, character)
+        print("Saved charactersheet!")
 
 def prompt_for_command(character:Character):
 
