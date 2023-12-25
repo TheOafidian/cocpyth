@@ -18,6 +18,7 @@ class Occupation(BaseModel):
     name: str
     points_rule: str
     skill_choices: int
+    specific_skill_choices : List[List[str]] = []
     social_choices: int
     skills: List[str]
     description: Optional[str] = None
@@ -26,12 +27,15 @@ class Occupation(BaseModel):
     def __init__(self, constructor: OccupationConstructor):
         
         skills = [sk.strip() for sk in constructor.skills if sk.strip() not in ["Any", "Interpersonal"]]
+        specific_skill_choices = [s.strip().split("|") for s in constructor.skills if "|" in s]
+
         super().__init__(
             name=constructor.name.strip(),
             points_rule=constructor.points.strip(),
             skills=skills,
             skill_choices=constructor.skills.count("Any"),
             social_choices=constructor.skills.count("Interpersonal"),
+            specific_skill_choices = specific_skill_choices,
             description=constructor.description,
         )           
         

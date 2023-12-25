@@ -70,17 +70,26 @@ class Character:
             return 9
         return 8
 
-    
-    def add_occupation(self, occupation: Occupation):
-        self.occupation = occupation
-        parts= occupation.points_rule.split(",")
-        total_skill_points = 0
+    def _calculate_occupational_skill_points(self, formula:str):
+        """Calculates the total occupational skill points based on the values of characterstics.
+         An example formula: 2*Education+2*Power
+        """
+        total = 0
+        if "*" not in formula:
+            raise SyntaxError(f"Formula {formula} could not be interpreted to a skill points value.")
+        parts = formula.split("+")
         for part in parts:
             skill, modifier = part.split("*")
             skill = getattr(self, skill.lower())
-            total_skill_points += (skill.current * int(modifier))    
-        
-        self.occupational_skill_points = total_skill_points
+            total += (skill.current * int(modifier))
+        return total
+
+    
+    def add_occupation(self, occupation: Occupation):
+        self.occupation = occupation
+        options = occupation.points_rule.split("|")
+        options_points = [self._calculate_occupational_skill_points(o) for o in  options]
+        self.occupational_skill_points = max(options_points)
 
 
     def list_skills(self):

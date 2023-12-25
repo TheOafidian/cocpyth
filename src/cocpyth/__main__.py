@@ -111,7 +111,7 @@ def _prompt_for_skill(message: str, skills:list):
     return interpret_skill(skill, skills)
 
 
-def pick_skills(occupation: Occupation, options:list):
+def pick_skills(occupation: Occupation, options:list, counts_as_skill_choice=True):
 
     pick_message = [
         ("", "You still have "),
@@ -126,7 +126,8 @@ def pick_skills(occupation: Occupation, options:list):
     options = [option for option in options if option not in occupation.skills]
     skill = _prompt_for_skill(pick_message, options)
     occupation.skills.append(skill)
-    occupation.skill_choices -= 1
+    if counts_as_skill_choice:
+        occupation.skill_choices -= 1
 
 def spend_occupational_sp(character: Character, occupation: Occupation):
 
@@ -230,6 +231,10 @@ if __name__ == "__main__":
         # Add occupation and skill pool
         occupation = select_occupation(character.full_name)
         character.add_occupation(occupation)
+
+        if len(occupation.specific_skill_choices) > 0:
+            for choice in occupation.specific_skill_choices:
+                pick_skills(occupation, choice, counts_as_skill_choice=False)
 
         while occupation.skill_choices > 0:
             pick_skills(occupation, list(SKILLS1920.keys()))

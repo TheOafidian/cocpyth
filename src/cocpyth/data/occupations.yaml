@@ -25,6 +25,18 @@ coc1920:
       - Science
       - Language
       - Mechanical Repair
+  - name: Artist
+    credit: 9-50
+    points: Education*2+Power*2|Education*2+Dexterity*2
+    skills:
+      - Arts and Crafts
+      - History|Natural World
+      - Interpersonal
+      - Language
+      - Spot Hidden
+      - Psychology
+      - Any
+      - Any
   - name: Doctor of Medicine
     credit: 30-80
     points: Education*4
