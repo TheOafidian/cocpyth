@@ -36,7 +36,7 @@ class Stat(BaseModel):
         return "{}: {}".format(self.name, self.current)
 
     def __add__(self, x):
-        temp = self.copy()
+        temp = self.model_copy()
         temp.current += x
         return temp
 
@@ -45,7 +45,7 @@ class Stat(BaseModel):
         return self
 
     def __sub__(self, x):
-        temp = self.copy()
+        temp = self.model_copy()
         temp.current -= x
         return temp
 
@@ -54,12 +54,12 @@ class Stat(BaseModel):
         return self
 
     def __mul__(self, x):
-        temp = self.copy()
+        temp = self.model_copy()
         temp.current *= x
         return temp
 
     def __truediv__(self, x):
-        temp = self.copy()
+        temp = self.model_copy()
         temp.current = cthulhu_round(temp.current / x) 
         return temp
 
@@ -84,6 +84,9 @@ class Stat(BaseModel):
 
     def __neg__(self):
         return -self.current
+    
+    def __eq__(self, other):
+        return self.current == other.current and self.name == other.name
 
 
 strength_settings = {
