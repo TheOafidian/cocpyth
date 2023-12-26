@@ -124,10 +124,15 @@ def pick_skills(occupation: Occupation, options:list, counts_as_skill_choice=Tru
     
     pick_message.append(("", " to pick you've trained in your occupation.\nWhat skill do you choose? "))
     options = [option for option in options if option not in occupation.skills]
+    
+    if not counts_as_skill_choice:
+        pick_message = "Choose from the following skills: "
+    
     skill = _prompt_for_skill(pick_message, options)
     occupation.skills.append(skill)
     if counts_as_skill_choice:
         occupation.skill_choices -= 1
+    return skill
 
 def spend_occupational_sp(character: Character, occupation: Occupation):
 
@@ -231,6 +236,12 @@ if __name__ == "__main__":
         # Add occupation and skill pool
         occupation = select_occupation(character.full_name)
         character.add_occupation(occupation)
+
+        if len(occupation.specialization_choices) > 0:
+            specializations = occupation.specialization_choices
+            for i in range(occupation.specialization_n_choices):
+                chosen_skill = pick_skills(occupation, specializations, counts_as_skill_choice=False)
+                specializations.remove(chosen_skill)
 
         if len(occupation.specific_skill_choices) > 0:
             for choice in occupation.specific_skill_choices:

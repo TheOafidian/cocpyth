@@ -37,6 +37,52 @@ coc1920:
       - Psychology
       - Any
       - Any
+  - name: Athlete
+    credit: 9-70
+    points: Education*2+Strength*2|Education*2+Dexterity*2
+    skills:
+      - Climb
+      - Jump
+      - Fighting (Brawl)
+      - Ride
+      - Interpersonal
+      - Swim
+      - Throw
+      - Any
+  - name: Author
+    credit: 9-30
+    points: Education*4
+    skills:
+      - Arts and Crafts
+      - History
+      - Library Use
+      - Language
+      - Language (Own)
+      - Natural World|Occult
+      - Psychology
+      - Any
+  - name: Clergy, member of the
+    credit: 9-60
+    points: Education*4
+    skills:
+      - Accounting
+      - History
+      - Library Use
+      - Listen
+      - Interpersonal
+      - Language
+      - Psychology
+      - Any  
+  - name: Criminal
+    credit: 5-65
+    points: Education*2+Strength*2|Education*2+Dexterity*2
+    skills:
+      - Interpersonal
+      - Psychology
+      - Spot Hidden
+      - Stealth
+      - 4(Appraise|Disguise|Fighting|Firearms|Locksmith|Mechanical Repair|Sleight of Hand)
+        
   - name: Doctor of Medicine
     credit: 30-80
     points: Education*4
