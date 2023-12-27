@@ -2,8 +2,7 @@ import random
 from importlib.resources import open_text
 from cocpyth.dtypes.character import GenderEnum
 
-# TODO: implement a random name generator (from 1920 names lists?)
-def generate_name(gender:GenderEnum):
+def generate_name(gender:GenderEnum, seed=False):
     namesf = "male_names.tsv"    
     lnamesf = "lnames.txt"
 
@@ -17,4 +16,7 @@ def generate_name(gender:GenderEnum):
 
     names = [n.strip() for n in names]
     lnames = [n.strip() for n in lnames]
+
+    if seed:
+        random.seed(seed)
     return random.choice(names), random.choice(lnames)

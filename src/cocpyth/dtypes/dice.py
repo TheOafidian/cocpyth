@@ -7,10 +7,12 @@ from pydantic.dataclasses import dataclass
 class Dice:
     max: PositiveInt = 100
 
-    def roll(self):
+    def roll(self, seed=False):
+        if seed: random.seed(seed)
         return random.randint(1, self.max)
 
-    def rolln(self, x: int):
+    def rolln(self, x: int, seed=False):
+        if seed: random.seed(seed)
         results = []
         for i in range(x):
             results.append(random.randint(1, self.max))

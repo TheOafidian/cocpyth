@@ -10,8 +10,13 @@ class CharacterGenerator():
     rstats: bool
     rgender: Union[bool, GenderEnum]
     rname: Union[bool,str]
+    seed: Union[bool,int] = False
 
     def generate(self):
+
+        if self.seed:
+            random.seed(self.seed)
+            #raise NotImplementedError("Implement seeded version")
 
         if self.rgender == True:
             self.rgender = random.choice(list(GenderEnum))
@@ -22,9 +27,9 @@ class CharacterGenerator():
         elif type(self.rname) == str:
             fname, lname = self.rname.split(" ", 1)
         else: 
-            fname, lname = generate_name(self.rgender)
+            fname, lname = generate_name(self.rgender, seed=self.seed)
         if self.rstats:
-            character = Character(first_name=fname, last_name=lname)
+            character = Character(first_name=fname, last_name=lname, seed=self.seed)
         else:
             # TODO: lookup array spending mode and implement
             raise NotImplementedError

@@ -1,6 +1,6 @@
 from shutil import get_terminal_size
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 from pydantic.dataclasses import dataclass
 import pandas as pd
 from tabulate import tabulate
@@ -30,8 +30,20 @@ class Character:
     occupation : Optional[Occupation] = None
     occupational_skill_points: int = 0
     personal_skill_points: int = 0
+    seed: Union[bool,int] = False
 
     def __post_init__(self):
+        if self.seed:
+            self.sanity = stat.Sanity(seed=self.seed)
+            self.strength = stat.Strength(seed=self.seed)
+            self.dexterity = stat.Dexterity(seed=self.seed)
+            self.size = stat.Size(seed=self.seed)
+            self.constitution = stat.Constitution(seed=self.seed)
+            self.intelligence = stat.Intelligence(seed=self.seed)
+            self.education = stat.Education(seed=self.seed)
+            self.power = stat.Power(seed=self.seed)
+            self.appearance = stat.Appearance(seed=self.seed)
+            self.luck = stat.Luck(seed=self.seed)
         self.full_name = self.first_name + " " + self.last_name
         self.sanity.current = self.power.current
         self.sanity.max = self.sanity.current
@@ -44,6 +56,7 @@ class Character:
         self.damage_bonus, self.build = self._determine_build_db()
         self.moverate = self._determine_move_rate()
         self.personal_skill_points = (self.intelligence * 10).current
+
 
     def _determine_build_db(self):
         physique = self.strength.current + self.size.current

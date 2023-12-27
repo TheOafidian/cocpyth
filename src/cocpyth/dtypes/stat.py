@@ -6,7 +6,7 @@ from cocpyth.utils.weird_math import cthulhu_round
 
 class Stat(BaseModel):
     name: str
-    game_over: str
+    game_over: str = ''
     max: PositiveInt = 100
     min: NonNegativeInt = 0
     current: NonNegativeInt = 0
@@ -89,116 +89,130 @@ class Stat(BaseModel):
         return self.current == other.current and self.name == other.name
 
 
+def five_times_three_d6(seed=False):
+    return 5 * d6.rolln(3, seed)
+
+
+def five_times_two_d6_plus_6(seed=False):
+    return 5 * (6+d6.rolln(2, seed))
+
+
 strength_settings = {
     "name": "Strength",
-    "current": 5 * d6.rolln(3),
     "game_over": "Your frail body succumbs under its own weight. You are unable to move.",
 }
 
 
 class Strength(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Strength, self).__init__(**strength_settings)
+        self.current = five_times_three_d6(seed)
 
 
 constitution_settings = {
     "name": "Constitution",
-    "current": 5 * d6.rolln(3),
     "game_over": "Your sickness beats you in your final hour, you drop dead to the floor.",
 }
 
 
 class Constitution(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Constitution, self).__init__(**constitution_settings)
-
+        self.current = five_times_three_d6(seed)
 
 dexterity_settings = {
     "name": "Dexterity",
-    "current": 5 * d6.rolln(3),
     "game_over": "You are unable to coordinate your body and can no longer perform physical tasks.",
 }
 
 
 class Dexterity(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Dexterity, self).__init__(**dexterity_settings)
+        self.current = five_times_three_d6(seed)
 
 
 appearance_settings = {
     "name": "Appearance",
-    "current": 5 * d6.rolln(3),
     "game_over": "You are a horrid person both inside and out. People no longer talk to you, you spend the rest of your life alone.",
 }
 
 
 class Appearance(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Appearance, self).__init__(**appearance_settings)
+        self.current = five_times_three_d6(seed)
 
 
-intelligence_settings = {"name": "Size", "current": 5 * (d6.rolln(2) + 6), "game_over": "You've just dissapeared."}
-
-
-class Size(Stat):
-    def __init__(self):
-        super(Size, self).__init__(**intelligence_settings)
-
-
-size_settings = {"name": "Size", "min": 35, "current": 5 * (d6.rolln(2) + 6), "game_over": "You've just dissapeared."}
+size_settings = {
+    "name": "Size",  
+    "game_over": "You've just dissapeared."
+}
 
 
 class Size(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Size, self).__init__(**size_settings)
-
+        self.current = five_times_two_d6_plus_6(seed)
 
 intelligence_settings = {
     "name": "Intelligence",
-    "current": 5 * (d6.rolln(2) + 6),
     "game_over": "You are in a state of drooling and babbling.",
 }
 
 
 class Intelligence(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Intelligence, self).__init__(**intelligence_settings)
+        self.current = five_times_two_d6_plus_6(seed)
 
 
-education_settings = {"name": "Education", "current": 5 * (d6.rolln(2) + 6), "game_over": "You lose your memory."}
+education_settings = {
+    "name": "Education", 
+    "game_over": "You lose your memory."
+}
 
 
 class Education(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Education, self).__init__(**education_settings)
+        self.current = five_times_two_d6_plus_6(seed)
 
 
-luck_settings = {"name": "Luck", "current": 5 * (d6.rolln(3)), "game_over": "Misfortune befalls you."}
+luck_settings = {
+    "name": "Luck",
+    "game_over": "Misfortune befalls you."
+}
 
 
 class Luck(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Luck, self).__init__(**luck_settings)
+        self.current = five_times_three_d6(seed)
 
 
 power_settings = {
     "name": "Power",
-    "current": 5 * (d6.rolln(3)),
     "game_over": "You wander the streets in a zombie-like fashion.",
 }
 
 
 class Power(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Power, self).__init__(**power_settings)
+        self.current = five_times_three_d6(seed)
 
 
-sanity_settings = {"name": "Sanity", "current": 5 * (d6.rolln(2) + 6), "game_over": "You are driven insane!"}
+sanity_settings = {
+    "name": "Sanity",
+    "game_over": "You are driven insane!"
+}
 
 
 class Sanity(Stat):
-    def __init__(self):
+    def __init__(self, seed=False):
         super(Sanity, self).__init__(**sanity_settings)
+        self.current = five_times_two_d6_plus_6(seed)
 
 
 hitpoints_settings = {
