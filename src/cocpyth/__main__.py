@@ -209,9 +209,39 @@ def prompt_for_command(character:Character):
     )
     command = interpret_command(command)
     command_switch(command, character)
-    
 
-if __name__ == "__main__":
+def create_new_character(char_sheet_file):
+    """Create a new character"""
+    character = character_generation_prompts()
+    print("\n", character.format_stats())
+    
+    # Add occupation and skill pool
+    occupation = select_occupation(character.full_name)
+    character.add_occupation(occupation)
+
+    if len(occupation.specialization_choices) > 0:
+        specializations = occupation.specialization_choices
+        for i in range(occupation.specialization_n_choices):
+            chosen_skill = pick_skills(occupation, specializations, counts_as_skill_choice=False)
+            specializations.remove(chosen_skill)
+
+    if len(occupation.specific_skill_choices) > 0:
+        for choice in occupation.specific_skill_choices:
+            pick_skills(occupation, choice, counts_as_skill_choice=False)
+
+    while occupation.skill_choices > 0:
+        pick_skills(occupation, list(SKILLS1920.keys()))
+
+    while character.occupational_skill_points > 0:
+        spend_occupational_sp(character, occupation)
+
+    while character.personal_skill_points > 0:
+        spend_personal_sp(character)
+
+    save_character(character, char_sheet_file)
+
+
+def cli():
 
     character_loaded = False
 
@@ -230,38 +260,14 @@ if __name__ == "__main__":
             char_sheet_file = DEFAULT_JSON
     
     if not character_loaded:
-        character = character_generation_prompts()
-        print("\n", character.format_stats())
-        
-        # Add occupation and skill pool
-        occupation = select_occupation(character.full_name)
-        character.add_occupation(occupation)
-
-        if len(occupation.specialization_choices) > 0:
-            specializations = occupation.specialization_choices
-            for i in range(occupation.specialization_n_choices):
-                chosen_skill = pick_skills(occupation, specializations, counts_as_skill_choice=False)
-                specializations.remove(chosen_skill)
-
-        if len(occupation.specific_skill_choices) > 0:
-            for choice in occupation.specific_skill_choices:
-                pick_skills(occupation, choice, counts_as_skill_choice=False)
-
-        while occupation.skill_choices > 0:
-            pick_skills(occupation, list(SKILLS1920.keys()))
-
-        while character.occupational_skill_points > 0:
-            spend_occupational_sp(character, occupation)
-
-        while character.personal_skill_points > 0:
-            spend_personal_sp(character)
-
-        save_character(character, char_sheet_file)
-    
-    if character_loaded:
+        create_new_character(char_sheet_file) 
+    else:
         print("\n", character.format_stats())
     
     command = prompt_for_command(character)
     while command != "exit":
         command = prompt_for_command(character)
-        
+
+
+if __name__ == "__main__":
+    cli()
