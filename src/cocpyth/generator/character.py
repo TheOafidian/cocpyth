@@ -1,7 +1,7 @@
 import random
 from typing import Union
 from pydantic.dataclasses import dataclass
-from click import prompt
+from prompt_toolkit import prompt
 from cocpyth.generator.name import generate_name
 from cocpyth.dtypes.character import GenderEnum, Character
 
