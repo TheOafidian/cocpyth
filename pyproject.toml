@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-requirements-txt"]
 build-backend = "hatchling.build"
 
 [project]
 name = "cocpyth"
-dynamic = ["version"]
+dynamic = ["version", "dependencies"]
 description = 'Command line interface to generate Call of Cthulhu characters'
 readme = "README.md"
 requires-python = ">=3.7"
@@ -24,7 +24,6 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
 
 [project.urls]
 Documentation = "https://github.com/TheOafidian/cocpyth#readme"
@@ -79,6 +78,9 @@ all = [
   "style",
   "typing",
 ]
+
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]
 
 [tool.black]
 target-version = ["py37"]
