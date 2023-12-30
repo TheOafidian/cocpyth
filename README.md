@@ -18,15 +18,11 @@ pip install cocpyth
 
 ## Usage
 
+Simply type
 ```console
-Usage: cocpyth [OPTIONS] FILENAME COMMAND [ARGS]...
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  generate-character
+cocpyth 
 ```
+press enter and follow the prompts to generate a character. Don't forget to use tab for autocompletion goodness!
 
 ## License
 
