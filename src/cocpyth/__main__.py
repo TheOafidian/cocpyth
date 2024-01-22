@@ -79,7 +79,7 @@ def cli():
             char_sheet_file = DEFAULT_JSON
     
     if not character_loaded:
-        create_new_character(char_sheet_file) 
+        character = create_new_character(char_sheet_file) 
     else:
         print("\n", character.format_stats())
     

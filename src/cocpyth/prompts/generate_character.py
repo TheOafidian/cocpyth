@@ -160,7 +160,7 @@ def spend_personal_sp(character: Character):
         character.spend_personal_skill_points(skill, int(amount_sp))
 
 
-def create_new_character(char_sheet_file):
+def create_new_character(char_sheet_file) -> Character:
     """Create a new character"""
     character = character_generation_prompts()
     print("\n", character.format_stats())
@@ -189,3 +189,4 @@ def create_new_character(char_sheet_file):
         spend_personal_sp(character)
 
     save_character(character, char_sheet_file)
+    return character
