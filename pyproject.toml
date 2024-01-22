@@ -7,7 +7,7 @@ name = "cocpyth"
 dynamic = ["version", "dependencies"]
 description = 'Command line interface to generate Call of Cthulhu characters'
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.7, <3.11"
 license = "MIT"
 keywords = ["Call", "of", "Cthulhu", "Character", "Generator", "cli"]
 authors = [
