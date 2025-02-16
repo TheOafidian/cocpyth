@@ -2,6 +2,8 @@ import random
 from typing import Union
 from pydantic.dataclasses import dataclass
 from prompt_toolkit import prompt
+from prompt_toolkit.validation import Validator
+from cocpyth.prompts.validation import is_text
 from cocpyth.generator.name import generate_name
 from cocpyth.dtypes.character import GenderEnum, Character
 
@@ -22,8 +24,15 @@ class CharacterGenerator():
             self.rgender = random.choice(list(GenderEnum))
 
         if not self.rname:
-            fname = prompt("First name?", type=str)
-            lname = prompt("Last name?", type=str)
+            
+            name_validator = Validator.from_callable(
+                is_text,
+                error_message="Name should be atleast two characters long",
+                move_cursor_to_end=True
+            )
+            
+            fname = prompt("First name?", validator=name_validator)
+            lname = prompt("Last name?", validator=name_validator)
         elif type(self.rname) == str:
             fname, lname = self.rname.split(" ", 1)
         else: 

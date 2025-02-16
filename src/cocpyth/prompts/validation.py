@@ -6,6 +6,11 @@ from cocpyth.dtypes.occupation import OCCUPATIONS1920
 from cocpyth.dtypes.character import GenderEnum
 import cocpyth.prompts.default_responses as responses
 
+def is_text(text):
+    if type(text) == str:
+        return len(text) > 1
+    return type(text) == str 
+
 def yes_or_no(response:str):
     res = response.lower().strip()
     if res in responses.AFFIRM or res == "":
